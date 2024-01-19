@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body>
+        <div class="flex justify-center items-center h-screen">
+            <div class="bg-white p-16 rounded shadow-2xl w-2/3">
+                <h2 class="text-3xl font-bold mb-10 text-gray-800">Login</h2>
+                <form action="./api/login.php" method="post">
+                    <div>
+                        <input type="text" name="username" placeholder="Username"
+                            class="w-full border-2 border-gray-400 p-3 rounded outline-none focus:border-purple-500"
+                            required>
+                    </div>
+                    <div class="mt-5">
+                        <input type="password" name="password" placeholder="Password"
+                            class="w-full border-2 border-gray-400 p-3 rounded outline-none focus:border-purple-500"
+                            required>
+                    </div>
+                    <div class="mt-10">
+                        <button type="submit" name="login"
+                            class="bg-purple-500 text-white p-3 rounded font-semibold w-full">Login</button>
+                    </div>
+                </form>
+                <div class="mt-10">
+                    <a href="register.html" class="text-gray-600 hover:underline">Don't have an account? Register
+                        here.</a>
+                </div>
+            </div>
+        </div>
+    </body>
+
+</html>
