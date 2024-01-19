@@ -38,15 +38,6 @@
             window.location.href = './login.html'
         }
     </script>
-    <?php
-
-    require_once __DIR__ . '/api/database.php';
-
-    $posts_sql = "SELECT * FROM forum_posts";
-    $posts_query = mysqli_query($connection, $posts_sql);
-    $posts_row = mysqli_fetch_array($posts_query);
-
-    ?>
 </head>
 
 <body>
@@ -112,27 +103,6 @@
             </button>
         </div>
     </header>
-
-
-    <!-- (\=============== MAIN COMPONENT ===============/) -->
-    <main class="flex justify-center">
-        <div class="p-8">
-            <div class="h-screen w-[40rem]">
-                <?php
-                print_r($posts_row);
-                for ($i = 0; $i < mysqli_num_rows($posts_query); $i++) {
-                    $caption = $posts_row['caption'];
-                    $date = $posts_row['date'];
-
-                    echo "
-                    <div>$caption at $date</div>
-                    ";
-                }
-                ?>
-            </div>
-        </div>
-    </main>
-
 
     <script src="./assets/darkmode.js" defer></script>
     <script defer>

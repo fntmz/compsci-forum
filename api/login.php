@@ -1,10 +1,6 @@
-
-
 <?php
 require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/sendJson.php';
-
-echo 'Hello World!';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
@@ -34,6 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
     if ($row === null) sendJson(404, 'User not found! (Username is not registered)');
     if ($password != $row['password']) sendJson(401, 'Incorrect Password!');
+?>
+
+    <script>
+        localStorage.setItem('id', <?php echo $row['id']; ?>);
+    </script>
+
+<?php
     sendJson(200, 'Login successful!', array(
         'user_id' => $row['id']
     ));
