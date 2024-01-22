@@ -18,28 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         );
     endif;
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) :
-        sendJson(422, 'Invalid Email Address!');
-
-    elseif (strlen($password) < 8) :
-        sendJson(422, 'Your password must be at least 8 characters long!');
-
-    elseif (strlen($username) < 3) :
-        sendJson(422, 'Your username must be at least 3 characters long!');
-
-    elseif ($password !== $password_confirm) :
-        sendJson(422, 'Your password and confirm password does not match!');
-
-    endif;
-    $sql = "SELECT `email` FROM `forum_users` WHERE `email`='$email'";
+    $sql = "INSERT INTO `forum_posts`(`caption`,`author_id`) VALUES ('$caption','$author_id')";
     $query = mysqli_query($connection, $sql);
-    $row_num = mysqli_num_rows($query);
-
-    if ($row_num > 0) sendJson(422, 'This email already in use!');
-
-    $sql = "INSERT INTO `forum_users`(`username`,`public_name`,`password`,`email`) VALUES ('$username','$public_name','$password','$email')";
-    $query = mysqli_query($connection, $sql);
-    if ($query) sendJson(201, 'You have successfully registered.');
+    if ($query) sendJson(201, 'You have successfully posted.');
     sendJson(500, 'Unable to handle request.');
 endif;
 
