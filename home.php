@@ -38,14 +38,10 @@
             window.location.href = './login.html'
         }
     </script>
+
     <?php
-
     require_once __DIR__ . '/api/database.php';
-
-    $posts_sql = "SELECT * FROM forum_posts";
-    $posts_query = mysqli_query($connection, $posts_sql);
-    $posts_row = mysqli_fetch_array($posts_query);
-
+    date_default_timezone_set("UTC");
     ?>
 </head>
 
@@ -119,15 +115,35 @@
         <div class="p-8">
             <div class="h-screen w-[40rem]">
                 <?php
-                print_r($posts_row);
-                for ($i = 0; $i < mysqli_num_rows($posts_query); $i++) {
-                    $caption = $posts_row['caption'];
-                    $date = $posts_row['date'];
+                $posts_sql = "SELECT * FROM forum_posts";
+                $posts_result = $connection->query($posts_sql);
 
-                    echo "
-                    <div>$caption at $date</div>
-                    ";
+                $author_sql = "SELECT * FROM forum_users";
+                $author_result = $connection->query($author_sql);
+                $authors = array();
+                if ($author_result->num_rows > 0) {
+                    while ($row = $author_result->fetch_assoc()) {
+                        array_push($authors, array($row['id'] => $row['username']));
+                    }
+                } else {
+                    echo "0 results";
                 }
+
+
+                if ($posts_result->num_rows > 0) {
+                    while ($row = $posts_result->fetch_assoc()) {
+                        $caption = $row['caption'];
+                        $date = date_format($row['date_created'], "F jS, Y");
+                        $author_name = $authors[$row['author_id']];
+
+                        echo "
+                            <div>$author_name said $caption on $date</div>
+                        ";
+                    }
+                } else {
+                    echo "0 results";
+                }
+                $connection->close();
                 ?>
             </div>
         </div>
