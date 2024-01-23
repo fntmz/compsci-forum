@@ -42,6 +42,40 @@
     <?php
     require_once __DIR__ . '/api/database.php';
     date_default_timezone_set("UTC");
+
+    // GET POSTS
+    $posts_sql = "SELECT * FROM forum_posts";
+    $posts_result = $connection->query($posts_sql);
+
+    // GET AUTHORS
+    $author_sql = "SELECT * FROM forum_users";
+    $author_result = $connection->query($author_sql);
+    $authors = array();
+
+    // SAVE AUTHORS TO ARRAY
+    if ($author_result->num_rows > 0) {
+        while ($row = $author_result->fetch_assoc()) {
+            array_push($authors, array($row['id'], $row['username']));
+        }
+    } else {
+        echo "0 results";
+    }
+
+    $posts_final = array();
+
+    // SAVE POSTS TO ARRAY
+    while ($row = $posts_result->fetch_assoc()) {
+        $caption = $row['caption'];
+        for ($i = 0; $i < count($authors); $i++) {
+            if ($authors[$i][0] == $row['author_id']) {
+                $author_name = $authors[$i][1];
+            }
+        }
+        $date = $row['date_created'];
+
+        array_push($posts_final, array($caption, $author_name, $date));
+    }
+    $connection->close();
     ?>
 </head>
 
@@ -65,7 +99,7 @@
                 </div>
                 <div>Search</div>
             </button>
-            <a href="/messages" class="flex items-center">
+            <a class="flex items-center" disabled>
                 <div class="h-16 w-20 grid place-items-center">
                     <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="1.5rem" height="1.5rem">
                         <path d="M 15 3 C 7.82 3 2 7.925 2 14 C 2 17.368 3.7933281 20.378484 6.6113281 22.396484 C 6.6832805 23.932468 6.4452784 26.053382 4.3261719 27.03125 A 0.5 0.5 0 0 0 4.3222656 27.033203 A 0.5 0.5 0 0 0 4 27.5 A 0.5 0.5 0 0 0 4.5 28 C 4.5119372 28 4.5232366 27.998109 4.5351562 27.998047 A 0.5 0.5 0 0 0 4.5429688 27.998047 C 6.9769949 27.982445 9.0432734 26.667034 10.46875 25.277344 C 10.92075 24.836344 11.550875 24.619328 12.171875 24.736328 C 13.081875 24.909328 14.028 25 15 25 C 22.18 25 28 20.075 28 14 C 28 7.925 22.18 3 15 3 z" />
@@ -81,7 +115,7 @@
                 </div>
                 <div>Create</div>
                 </button>
-                <a href="/" class="flex items-center">
+                <a class="flex items-center">
                     <div class="h-16 w-20 grid place-items-center">
                         <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="1.5rem" height="1.5rem">
                             <path d="M18,19v-2c0.45-0.223,1.737-1.755,1.872-2.952c0.354-0.027,0.91-0.352,1.074-1.635c0.088-0.689-0.262-1.076-0.474-1.198 c0,0,0.528-1.003,0.528-2.214c0-2.428-0.953-4.5-3-4.5c0,0-0.711-1.5-3-1.5c-4.242,0-6,2.721-6,6c0,1.104,0.528,2.214,0.528,2.214 c-0.212,0.122-0.562,0.51-0.474,1.198c0.164,1.283,0.72,1.608,1.074,1.635C10.263,15.245,11.55,16.777,12,17v2c-1,3-9,1-9,8h24 C27,20,19,22,18,19z" />
@@ -111,42 +145,22 @@
 
 
     <!-- (\=============== MAIN COMPONENT ===============/) -->
+
     <main class="flex justify-center">
         <div class="p-8">
             <div class="h-screen w-[40rem]">
-                <?php
-                $posts_sql = "SELECT * FROM forum_posts";
-                $posts_result = $connection->query($posts_sql);
-
-                $author_sql = "SELECT * FROM forum_users";
-                $author_result = $connection->query($author_sql);
-                $authors = array();
-                if ($author_result->num_rows > 0) {
-                    while ($row = $author_result->fetch_assoc()) {
-                        array_push($authors, array($row['id'] => $row['username']));
-                    }
-                } else {
-                    echo "0 results";
-                }
-
-
-                if ($posts_result->num_rows > 0) {
-                    while ($row = $posts_result->fetch_assoc()) {
-                        $caption = $row['caption'];
-                        $date = date_format($row['date_created'], "F jS, Y");
-                        $author_name = $authors[$row['author_id']];
-
-                        echo "
-                            <div>$author_name said $caption on $date</div>
-                        ";
-                    }
-                } else {
-                    echo "0 results";
-                }
-                $connection->close();
-                ?>
+                <?php foreach ($posts_final as $post) : ?>
+                    <div class="p-4 border-transparent border-b-custom-gray border-1">
+                        <div class="text-sm text-accent">
+                            <?php echo $post[1] ?> said
+                        </div>
+                        <?php echo $post[0] ?>
+                        <span class="text-sm text-custom-gray">
+                            <?php echo $post[2] ?>
+                        </span>
+                    </div>
+                <?php endforeach ?>
             </div>
-        </div>
     </main>
 
 
