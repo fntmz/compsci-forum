@@ -44,7 +44,7 @@
     date_default_timezone_set("UTC");
 
     // GET POSTS
-    $posts_sql = "SELECT * FROM forum_posts";
+    $posts_sql = "SELECT * FROM forum_posts ORDER BY date_created DESC";
     $posts_result = $connection->query($posts_sql);
 
     // GET AUTHORS
@@ -154,10 +154,16 @@
                         <div class="text-sm text-accent">
                             <?php echo $post[1] ?> said
                         </div>
-                        <?php echo $post[0] ?>
-                        <span class="text-sm text-custom-gray">
-                            <?php echo $post[2] ?>
-                        </span>
+                        <div>
+                            "<?php echo $post[0] ?>"
+                            <span class="text-sm text-custom-gray">
+                                on <?php echo $post[2] ?>
+                            </span>
+                        </div>
+                        <div class="flex justify-end gap-x-2">
+                            <button class="text-sm text-custom-gray">Delete</button>
+                            <button class="text-sm text-custom-gray">Reply</button>
+                        </div>
                     </div>
                 <?php endforeach ?>
             </div>
