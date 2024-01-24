@@ -44,36 +44,27 @@
     date_default_timezone_set("UTC");
 
     // GET POSTS
-    $posts_sql = "SELECT * FROM forum_posts ORDER BY date_created DESC";
+    $posts = array();
+    $posts_sql = "
+        SELECT forum_posts.id, username, caption, date_created
+        FROM `forum_posts`
+        LEFT JOIN forum_users ON forum_posts.author_id = forum_users.id
+        ORDER BY date_created DESC
+    ";
     $posts_result = $connection->query($posts_sql);
-
-    // GET AUTHORS
-    $author_sql = "SELECT * FROM forum_users";
-    $author_result = $connection->query($author_sql);
-    $authors = array();
-
-    // SAVE AUTHORS TO ARRAY
-    if ($author_result->num_rows > 0) {
-        while ($row = $author_result->fetch_assoc()) {
-            array_push($authors, array($row['id'], $row['username']));
-        }
-    } else {
-        echo "0 results";
+    while ($row = $posts_result->fetch_assoc()) {
+        array_push($posts, array($row['id'], $row['username'], $row['caption'], $row['date_created']));
     }
 
-    $posts_final = array();
-
-    // SAVE POSTS TO ARRAY
+    $comments = array();
+    $comments_sql = "
+        SELECT forum_comments.id, username, content
+        FROM `forum_comments`
+        LEFT JOIN forum_users ON forum_comments.author_id = forum_users.id
+        ORDER BY post_id DESC, forum_comments.id DESC
+    ";
     while ($row = $posts_result->fetch_assoc()) {
-        $caption = $row['caption'];
-        for ($i = 0; $i < count($authors); $i++) {
-            if ($authors[$i][0] == $row['author_id']) {
-                $author_name = $authors[$i][1];
-            }
-        }
-        $date = $row['date_created'];
-
-        array_push($posts_final, array($caption, $author_name, $date));
+        array_push($comments, array($row['id'], $row['username'], $row['caption']));
     }
     $connection->close();
     ?>
@@ -145,28 +136,35 @@
 
 
     <!-- (\=============== MAIN COMPONENT ===============/) -->
-
     <main class="flex justify-center">
         <div class="p-8">
             <div class="h-screen w-[40rem]">
-                <?php foreach ($posts_final as $post) : ?>
-                    <div class="p-4 border-transparent border-b-custom-gray border-1">
+                <?php
+                print_r($comments);
+                ?>
+                <?php foreach ($posts as $post) : ?>
+                    <div class="p-4 border-custom-gray border-b-1">
                         <div class="text-sm text-accent">
                             <?php echo $post[1] ?> said
                         </div>
                         <div>
-                            "<?php echo $post[0] ?>"
+                            "<?php echo $post[2] ?>"
                             <span class="text-sm text-custom-gray">
-                                on <?php echo $post[2] ?>
+                                on <?php echo $post[3] ?>
                             </span>
                         </div>
-                        <div class="flex justify-end gap-x-2">
-                            <button class="text-sm text-custom-gray">Delete</button>
-                            <button class="text-sm text-custom-gray">Reply</button>
+                        <div class="mt-2 grid grid-cols-2 gap-x-2 text-sm">
+                            <div class="col-span-1"></div>
+                            <form method="post" action="./api/commentCreate.php">
+                                <input name="caption" class="w-full p-1 border-b-1 border-transparent focus:border-accent" placeholder="Reply...">
+                                <input type="hidden" name="post_id">
+                                <input type="hidden" name="author_id">
+                            </form>
                         </div>
                     </div>
                 <?php endforeach ?>
             </div>
+        </div>
     </main>
 
 

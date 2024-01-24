@@ -5,10 +5,12 @@ require_once __DIR__ . '/sendJson.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
     $caption = $_POST['caption'];
+    $post_id = $_POST['post_id'];
     $author_id = $_POST['author_id'];
 
     if (
         !isset($caption) ||
+        !isset($post_id) ||
         !isset($author_id)
     ) :
         sendJson(
@@ -18,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         );
     endif;
 
-    $sql = "INSERT INTO `forum_posts`(`caption`,`author_id`) VALUES ('$caption','$author_id')";
+    $sql = "INSERT INTO `forum_posts`(`content`,`post_id`,`author_id`) VALUES ('$caption','$post_id','$author_id)";
     $query = mysqli_query($connection, $sql);
     if ($query) sendJson(201, 'You have successfully posted.');
     sendJson(500, 'Unable to handle request.');
