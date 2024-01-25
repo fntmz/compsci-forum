@@ -124,7 +124,6 @@
         </div>
     </main>
 
-    <script src="./assets/darkmode.js" defer></script>
     <script defer>
         // (\=============== DARKMODE ===============/)
         if (

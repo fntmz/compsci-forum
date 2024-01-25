@@ -58,13 +58,14 @@
 
     $comments = array();
     $comments_sql = "
-        SELECT forum_comments.id, username, content
+        SELECT forum_comments.id, post_id, username, content
         FROM `forum_comments`
         LEFT JOIN forum_users ON forum_comments.author_id = forum_users.id
         ORDER BY post_id DESC, forum_comments.id DESC
     ";
-    while ($row = $posts_result->fetch_assoc()) {
-        array_push($comments, array($row['id'], $row['username'], $row['caption']));
+    $comments_result = $connection->query($comments_sql);
+    while ($row = $comments_result->fetch_assoc()) {
+        array_push($comments, array($row['id'], $row['post_id'], $row['username'], $row['content']));
     }
     $connection->close();
     ?>
@@ -92,7 +93,7 @@
             </button>
             <a class="flex items-center" disabled>
                 <div class="h-16 w-20 grid place-items-center">
-                    <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="1.5rem" height="1.5rem">
+                    <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 30 30">
                         <path d="M 15 3 C 7.82 3 2 7.925 2 14 C 2 17.368 3.7933281 20.378484 6.6113281 22.396484 C 6.6832805 23.932468 6.4452784 26.053382 4.3261719 27.03125 A 0.5 0.5 0 0 0 4.3222656 27.033203 A 0.5 0.5 0 0 0 4 27.5 A 0.5 0.5 0 0 0 4.5 28 C 4.5119372 28 4.5232366 27.998109 4.5351562 27.998047 A 0.5 0.5 0 0 0 4.5429688 27.998047 C 6.9769949 27.982445 9.0432734 26.667034 10.46875 25.277344 C 10.92075 24.836344 11.550875 24.619328 12.171875 24.736328 C 13.081875 24.909328 14.028 25 15 25 C 22.18 25 28 20.075 28 14 C 28 7.925 22.18 3 15 3 z" />
                     </svg>
                 </div>
@@ -108,7 +109,7 @@
                 </button>
                 <a class="flex items-center">
                     <div class="h-16 w-20 grid place-items-center">
-                        <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="1.5rem" height="1.5rem">
+                        <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 30 30">
                             <path d="M18,19v-2c0.45-0.223,1.737-1.755,1.872-2.952c0.354-0.027,0.91-0.352,1.074-1.635c0.088-0.689-0.262-1.076-0.474-1.198 c0,0,0.528-1.003,0.528-2.214c0-2.428-0.953-4.5-3-4.5c0,0-0.711-1.5-3-1.5c-4.242,0-6,2.721-6,6c0,1.104,0.528,2.214,0.528,2.214 c-0.212,0.122-0.562,0.51-0.474,1.198c0.164,1.283,0.72,1.608,1.074,1.635C10.263,15.245,11.55,16.777,12,17v2c-1,3-9,1-9,8h24 C27,20,19,22,18,19z" />
                         </svg>
                     </div>
@@ -124,12 +125,12 @@
                 </div>
                 <div>Change Theme</div>
             </button>
-            <button class="flex items-center">
-                <div class="h-16 w-20 grid place-items-center"> <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512">
-                        <path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z" />
+            <button onclick="localStorage.clear('id')" class="flex items-center">
+                <div class="h-16 w-20 grid place-items-center"><svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512">
+                        <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
                     </svg>
                 </div>
-                <div>Settings</div>
+                <div>Logout</div>
             </button>
         </div>
     </header>
@@ -139,13 +140,10 @@
     <main class="flex justify-center">
         <div class="p-8">
             <div class="h-screen w-[40rem]">
-                <?php
-                print_r($comments);
-                ?>
-                <?php foreach ($posts as $post) : ?>
-                    <div class="p-4 border-custom-gray border-b-1">
-                        <div class="text-sm text-accent">
-                            <?php echo $post[1] ?> said
+                <?php foreach ($posts as $index => $post) : ?>
+                    <div class="p-2 border-custom-gray border-b-1">
+                        <div class="text-sm ">
+                            <span class="text-accent"><?php echo $post[1] ?></span> said
                         </div>
                         <div>
                             "<?php echo $post[2] ?>"
@@ -153,11 +151,29 @@
                                 on <?php echo $post[3] ?>
                             </span>
                         </div>
-                        <div class="mt-2 grid grid-cols-2 gap-x-2 text-sm">
-                            <div class="col-span-1"></div>
+                        <div class="mt-2 grid grid-cols-2 gap-x-2 text-xs">
+                            <div class="col-span-1">
+                                <?php foreach ($comments as $comment) : if ($comment[1] == $post[0]) : ?>
+                                        <div class="mt-1">
+                                            <span class="text-accent">
+                                                <?php echo $comment[2] ?>
+                                            </span>
+                                            replied "<?php echo $comment[3] ?>"
+                                        </div>
+                                <?php endif;
+                                endforeach; ?>
+                            </div>
                             <form method="post" action="./api/commentCreate.php">
-                                <input name="caption" class="w-full p-1 border-b-1 border-transparent focus:border-accent" placeholder="Reply...">
-                                <input type="hidden" name="post_id">
+                                <div class="flex">
+                                    <input name="caption" class="w-full p-1 border-b-1 border-transparent focus:border-accent" placeholder="Reply..." required>
+                                    <button type="submit">
+                                        <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width=".75rem" height=".75rem" viewBox="0 0 512 512">
+                                            <path d="M16.1 260.2c-22.6 12.9-20.5 47.3 3.6 57.3L160 376V479.3c0 18.1 14.6 32.7 32.7 32.7c9.7 0 18.9-4.3 25.1-11.8l62-74.3 123.9 51.6c18.9 7.9 40.8-4.5 43.9-24.7l64-416c1.9-12.1-3.4-24.3-13.5-31.2s-23.3-7.5-34-1.4l-448 256zm52.1 25.5L409.7 90.6 190.1 336l1.2 1L68.2 285.7zM403.3 425.4L236.7 355.9 450.8 116.6 403.3 425.4z" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <input type="hidden" name="post_id" value="<?php echo $post[0]; ?>">
                                 <input type="hidden" name="author_id">
                             </form>
                         </div>
@@ -167,8 +183,6 @@
         </div>
     </main>
 
-
-    <script src="./assets/darkmode.js" defer></script>
     <script defer>
         // (\=============== DARKMODE ===============/)
         if (
@@ -189,6 +203,12 @@
                 localStorage.setItem("darkmode", "light");
                 document.documentElement.classList.remove("dark");
             }
+        }
+
+        // (\=============== USER ID IN COMMENTS ===============/)
+        const comments = document.querySelectorAll('input[name="author_id"]');
+        for (let i = 0; i < comments.length; i++) {
+            comments[i].value = localStorage.getItem('id');
         }
     </script>
 </body>
