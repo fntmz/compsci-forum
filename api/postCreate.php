@@ -1,11 +1,12 @@
 <?php
+session_start();
 require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/sendJson.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
     $caption = $_POST['caption'];
-    $author_id = $_POST['author_id'];
+    $author_id = $_SESSION['id'];
 
     if (
         !isset($caption) ||

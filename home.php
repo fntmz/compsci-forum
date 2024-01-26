@@ -1,3 +1,39 @@
+<?php
+session_start();
+require_once __DIR__ . '/api/database.php';
+date_default_timezone_set("UTC");
+
+if (!isset($_SESSION['id'])) {
+    header('Location: ./login.html');
+}
+
+// GET POSTS
+$posts = array();
+$posts_sql = "
+        SELECT forum_posts.id, username, caption, date_created
+        FROM `forum_posts`
+        LEFT JOIN forum_users ON forum_posts.author_id = forum_users.id
+        ORDER BY date_created DESC
+    ";
+$posts_result = $connection->query($posts_sql);
+while ($row = $posts_result->fetch_assoc()) {
+    array_push($posts, array($row['id'], $row['username'], $row['caption'], $row['date_created']));
+}
+
+$comments = array();
+$comments_sql = "
+        SELECT forum_comments.id, post_id, username, content
+        FROM `forum_comments`
+        LEFT JOIN forum_users ON forum_comments.author_id = forum_users.id
+        ORDER BY post_id DESC, forum_comments.id DESC
+    ";
+$comments_result = $connection->query($comments_sql);
+while ($row = $comments_result->fetch_assoc()) {
+    array_push($comments, array($row['id'], $row['post_id'], $row['username'], $row['content']));
+}
+$connection->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,42 +69,7 @@
                 },
             },
         }
-
-        if (!localStorage.getItem('id')) {
-            window.location.href = './login.html'
-        }
     </script>
-
-    <?php
-    require_once __DIR__ . '/api/database.php';
-    date_default_timezone_set("UTC");
-
-    // GET POSTS
-    $posts = array();
-    $posts_sql = "
-        SELECT forum_posts.id, username, caption, date_created
-        FROM `forum_posts`
-        LEFT JOIN forum_users ON forum_posts.author_id = forum_users.id
-        ORDER BY date_created DESC
-    ";
-    $posts_result = $connection->query($posts_sql);
-    while ($row = $posts_result->fetch_assoc()) {
-        array_push($posts, array($row['id'], $row['username'], $row['caption'], $row['date_created']));
-    }
-
-    $comments = array();
-    $comments_sql = "
-        SELECT forum_comments.id, post_id, username, content
-        FROM `forum_comments`
-        LEFT JOIN forum_users ON forum_comments.author_id = forum_users.id
-        ORDER BY post_id DESC, forum_comments.id DESC
-    ";
-    $comments_result = $connection->query($comments_sql);
-    while ($row = $comments_result->fetch_assoc()) {
-        array_push($comments, array($row['id'], $row['post_id'], $row['username'], $row['content']));
-    }
-    $connection->close();
-    ?>
 </head>
 
 <body>
@@ -125,7 +126,7 @@
                 </div>
                 <div>Change Theme</div>
             </button>
-            <button onclick="localStorage.clear('id'); window.location.href = './login.html'" class="flex items-center">
+            <button onclick="window.location.href = './api/logout.php'" class="flex items-center">
                 <div class="h-16 w-20 grid place-items-center"><svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512">
                         <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
                     </svg>
@@ -174,7 +175,6 @@
                                 </div>
 
                                 <input type="hidden" name="post_id" value="<?php echo $post[0]; ?>">
-                                <input type="hidden" name="author_id">
                             </form>
                         </div>
                     </div>
@@ -203,12 +203,6 @@
                 localStorage.setItem("darkmode", "light");
                 document.documentElement.classList.remove("dark");
             }
-        }
-
-        // (\=============== USER ID IN COMMENTS ===============/)
-        const comments = document.querySelectorAll('input[name="author_id"]');
-        for (let i = 0; i < comments.length; i++) {
-            comments[i].value = localStorage.getItem('id');
         }
     </script>
 </body>
