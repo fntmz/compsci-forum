@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     ) :
         sendJson(
             422,
-            'Please fill all the required fields & None of the fields should be empty.',
+            'Fill all the required fields',
             array('required_fields' => array('username', 'password'))
         );
     endif;
@@ -23,20 +23,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     $password = trim($password);
 
     if (strlen($password) < 8) :
-        sendJson(422, 'Your password must be at least 8 characters long!');
+        sendJson(422, 'Password must be at least 8 characters in length');
     endif;
 
     $sql = "SELECT * FROM `forum_users` WHERE `username`='$username'";
     $query = mysqli_query($connection, $sql);
     $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-    if ($row === null) sendJson(404, 'User not found! (Username is not registered)');
-    if ($password != $row['password']) sendJson(401, 'Incorrect Password!');
+    if ($row === null) sendJson(404, 'User not found');
+    if ($password != $row['password']) sendJson(401, 'Incorrect password');
 
     $_SESSION['id'] = $row['id'];
 
-    sendJson(200, 'Login successful!', array(
+    sendJson(200, 'Login successful, will go to home page', array(
         'user_id' => $row['id']
     ));
 endif;
 
-sendJson(405, 'Invalid Request Method. HTTP method should be POST');
+sendJson(405, 'Invalid Request');
