@@ -9,35 +9,35 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
             tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        color: "rgb(var(--color))",
-                        "bg-color": "rgb(var(--bg-color))",
-                        "custom-gray": "rgb(var(--gray))",
-                        accent: "rgb(var(--accent))",
-                        "alt-accent": "rgb(var(--alt-accent))",
-                    },
-                    transitionProperty: {
-                        width: "width",
-                        height: "height",
-                        filter: "filter",
-                    },
-                    borderWidth: {
-                        1: "1px",
-                    },
-                    container: {
-                        center: true,
+                theme: {
+                    extend: {
+                        colors: {
+                            color: "rgb(var(--color))",
+                            "bg-color": "rgb(var(--bg-color))",
+                            "custom-gray": "rgb(var(--gray))",
+                            accent: "rgb(var(--accent))",
+                            "alt-accent": "rgb(var(--alt-accent))",
+                        },
+                        transitionProperty: {
+                            width: "width",
+                            height: "height",
+                            filter: "filter",
+                        },
+                        borderWidth: {
+                            1: "1px",
+                        },
+                        container: {
+                            center: true,
+                        },
                     },
                 },
-            },
-        }
+            }
         </script>
     </head>
 
     <body>
         <div class="flex justify-center items-center h-screen">
-            <div class="bg-bg-color p-16 rounded shadow-2xl shadow-custom-gray w-2/3">
+            <div class="bg-bg-color p-16 rounded shadow-2xl shadow-custom-gray w-3/5">
                 <h2 class="text-3xl font-bold mb-10 text-color">Register</h2>
                 <form action="./api/register.php" method="post">
                     <div>
@@ -77,17 +77,18 @@
             </div>
         </div>
 
-    <script defer>
-        // (\=============== DARKMODE ===============/)
-        if (
-            localStorage.darkmode === "dark" ||
-            (!("darkmode" in localStorage) &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
-        }
-    </script>
+        <script defer>
+            // (\=============== DARKMODE ===============/)
+            if (
+                localStorage.darkmode === "dark" ||
+                (!("darkmode" in localStorage) &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ) {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+        </script>
     </body>
+
 </html>
