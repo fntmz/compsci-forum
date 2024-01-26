@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     endif;
 
     $sql = "INSERT INTO `forum_posts`(`caption`,`author_id`) VALUES ('$caption','$author_id')";
-    $query = mysqli_query($connection, $sql);
+    $query = $db->prepare($sql)->execute();
     if ($query) sendJson(201, 'Posted successfully');
     sendJson(500, 'Unable to handle request. Try again');
 endif;

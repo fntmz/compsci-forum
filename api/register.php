@@ -44,13 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
     endif;
     $sql = "SELECT `email` FROM `forum_users` WHERE `email`='$email'";
-    $query = mysqli_query($connection, $sql);
-    $row_num = mysqli_num_rows($query);
+    $query = $db->prepare($sql);
+    $query->execute();
+    $row_num = $query->rowCount();
 
     if ($row_num > 0) sendJson(422, 'This email already in use');
 
     $sql = "INSERT INTO `forum_users`(`username`,`public_name`,`password`,`email`) VALUES ('$username','$public_name','$password','$email')";
-    $query = mysqli_query($connection, $sql);
+    $query = $db->prepare($sql)->execute();
     if ($query) sendJson(201, 'Registered successfully. Login to continue');
     sendJson(500, 'Unable to handle request. Try again');
 endif;

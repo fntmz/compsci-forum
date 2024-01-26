@@ -27,8 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     endif;
 
     $sql = "SELECT * FROM `forum_users` WHERE `username`='$username'";
-    $query = mysqli_query($connection, $sql);
-    $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+    $query = $db->prepare($sql);
+    $query->execute();
+    $row = $query->fetch(PDO::FETCH_ASSOC);
     if ($row === null) sendJson(404, 'User not found');
     if ($password != $row['password']) sendJson(401, 'Incorrect password');
 

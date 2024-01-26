@@ -15,8 +15,9 @@ $posts_sql = "
         LEFT JOIN forum_users ON forum_posts.author_id = forum_users.id
         ORDER BY date_created DESC
     ";
-$posts_result = $connection->query($posts_sql);
-while ($row = $posts_result->fetch_assoc()) {
+$posts_result = $db->prepare($posts_sql);
+$posts_result->execute();
+while ($row = $posts_result->fetch(PDO::FETCH_ASSOC)) {
     array_push($posts, array($row['id'], $row['username'], $row['caption'], $row['date_created']));
 }
 
@@ -27,11 +28,11 @@ $comments_sql = "
         LEFT JOIN forum_users ON forum_comments.author_id = forum_users.id
         ORDER BY post_id DESC, forum_comments.id DESC
     ";
-$comments_result = $connection->query($comments_sql);
-while ($row = $comments_result->fetch_assoc()) {
+$comments_result = $db->prepare($comments_sql);
+$comments_result->execute();
+while ($row = $comments_result->fetch(PDO::FETCH_ASSOC)) {
     array_push($comments, array($row['id'], $row['post_id'], $row['username'], $row['content']));
 }
-$connection->close();
 ?>
 
 <!DOCTYPE html>

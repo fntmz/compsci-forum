@@ -1,11 +1,11 @@
 <?php
-$hostname = 'localhost';
-$username = 'acJake';
-$password = 'asdf';
-$database = 'acJake';
-$port = 3306;
-$connection = mysqli_connect($hostname, $username, $password, $database, $port);
-if (mysqli_connect_errno()) {
-    echo "Connection Failed - " . mysqli_connect_error();
-    exit;
-}
+
+$option = array(
+    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+);
+
+$dsn = "mysql:host=localhost; dbname=acJake";
+$username = "acJake";
+$password = "asdf";
+
+$db = new PDO($dsn, $username, $password, $option);
