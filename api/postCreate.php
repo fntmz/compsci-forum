@@ -19,8 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         );
     endif;
 
-    $sql = "INSERT INTO `forum_posts`(`caption`,`author_id`) VALUES ('$caption','$author_id')";
-    $query = $db->prepare($sql)->execute();
+    $sql = "INSERT INTO `forum_posts`(`caption`,`author_id`) VALUES (:caption, :author_id)";
+    $query = $db->prepare($sql);
+    $query->bindParam(':caption', $caption);
+    $query->bindParam(':author_id', $author_id);
+    $query->execute();
     if ($query) sendJson(201, 'Posted successfully');
     sendJson(500, 'Unable to handle request. Try again');
 endif;

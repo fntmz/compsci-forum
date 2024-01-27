@@ -26,11 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         sendJson(422, 'Password must be at least 8 characters in length');
     endif;
 
-    $sql = "SELECT * FROM `forum_users` WHERE `username`='$username'";
+    $sql = "SELECT * FROM `forum_users` WHERE `username` = :username";
     $query = $db->prepare($sql);
+    $query->bindParam(':username', $username);
     $query->execute();
     $row = $query->fetch(PDO::FETCH_ASSOC);
-    if ($row === null) sendJson(404, 'User not found');
+    if ($row['id'] === null) sendJson(404, 'User not found');
     if ($password != $row['password']) sendJson(401, 'Incorrect password');
 
     $_SESSION['id'] = $row['id'];

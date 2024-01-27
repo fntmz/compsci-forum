@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     ) :
         sendJson(
             422,
-            'Please fill all the required fields & None of the fields should be empty.',
+            'Fill all the required fields',
             array('required_fields' => array('username', 'public_name', 'password', 'password_confirm', 'email'))
         );
     endif;
@@ -31,27 +31,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     $email = trim($email);
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) :
-        sendJson(422, 'Invalid Email Address!');
+        sendJson(422, 'Invalid email address');
 
     elseif (strlen($password) < 8) :
-        sendJson(422, 'Your password must be at least 8 characters long!');
+        sendJson(422, 'Password must be at least 8 characters in length');
 
     elseif (strlen($username) < 3) :
-        sendJson(422, 'Your username must be at least 3 characters long!');
+        sendJson(422, 'Username must be at least 3 characters in length');
 
     elseif ($password !== $password_confirm) :
-        sendJson(422, 'Your password and confirm password does not match!');
+        sendJson(422, 'Password and confirm password does not match');
 
     endif;
-    $sql = "SELECT `email` FROM `forum_users` WHERE `email`='$email'";
+    $sql = "SELECT `email` FROM `forum_users` WHERE `email` = :email";
     $query = $db->prepare($sql);
+    $query->bindParam(':email', $email);
     $query->execute();
     $row_num = $query->rowCount();
 
-    if ($row_num > 0) sendJson(422, 'This email already in use');
+    if ($row_num > 0) sendJson(422, 'Email already in use');
 
-    $sql = "INSERT INTO `forum_users`(`username`,`public_name`,`password`,`email`) VALUES ('$username','$public_name','$password','$email')";
-    $query = $db->prepare($sql)->execute();
+    $sql = "INSERT INTO `forum_users`(`username`,`public_name`,`password`,`email`) VALUES (:username, :public_name, :password, :email)";
+    $query = $db->prepare($sql);
+    $query->bindParam(':username', $username);
+    $query->bindParam(':public_name', $public_name);
+    $query->bindParam(':password', $password);
+    $query->bindParam(':email', $email);
+    $query->execute();
     if ($query) sendJson(201, 'Registered successfully. Login to continue');
     sendJson(500, 'Unable to handle request. Try again');
 endif;
