@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/database.php';
+require_once("../../../mysql.php");
 require_once __DIR__ . '/sendJson.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') :

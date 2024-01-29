@@ -56,22 +56,6 @@ if (!isset($_SESSION['id'])) {
                 </div>
                 <div>Home</div>
             </a>
-            <button class="flex items-center" @click="setSearchBarState">
-                <div class="h-16 w-20 grid place-items-center">
-                    <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 512 512">
-                        <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                    </svg>
-                </div>
-                <div>Search</div>
-            </button>
-            <a class="flex items-center" disabled>
-                <div class="h-16 w-20 grid place-items-center">
-                    <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 30 30">
-                        <path d="M 15 3 C 7.82 3 2 7.925 2 14 C 2 17.368 3.7933281 20.378484 6.6113281 22.396484 C 6.6832805 23.932468 6.4452784 26.053382 4.3261719 27.03125 A 0.5 0.5 0 0 0 4.3222656 27.033203 A 0.5 0.5 0 0 0 4 27.5 A 0.5 0.5 0 0 0 4.5 28 C 4.5119372 28 4.5232366 27.998109 4.5351562 27.998047 A 0.5 0.5 0 0 0 4.5429688 27.998047 C 6.9769949 27.982445 9.0432734 26.667034 10.46875 25.277344 C 10.92075 24.836344 11.550875 24.619328 12.171875 24.736328 C 13.081875 24.909328 14.028 25 15 25 C 22.18 25 28 20.075 28 14 C 28 7.925 22.18 3 15 3 z" />
-                    </svg>
-                </div>
-                <div>Messages</div>
-            </a>
             <a href="./postCreate.php" class="flex items-center">
                 <div class="h-16 w-20 grid place-items-center">
                     <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 448 512">
@@ -80,7 +64,7 @@ if (!isset($_SESSION['id'])) {
                 </div>
                 <div>Create</div>
                 </button>
-                <a class="flex items-center">
+                <a href="./profile.php" class="flex items-center">
                     <div class="h-16 w-20 grid place-items-center">
                         <svg class="fill-color" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="1.5rem" viewBox="0 0 30 30">
                             <path d="M18,19v-2c0.45-0.223,1.737-1.755,1.872-2.952c0.354-0.027,0.91-0.352,1.074-1.635c0.088-0.689-0.262-1.076-0.474-1.198 c0,0,0.528-1.003,0.528-2.214c0-2.428-0.953-4.5-3-4.5c0,0-0.711-1.5-3-1.5c-4.242,0-6,2.721-6,6c0,1.104,0.528,2.214,0.528,2.214 c-0.212,0.122-0.562,0.51-0.474,1.198c0.164,1.283,0.72,1.608,1.074,1.635C10.263,15.245,11.55,16.777,12,17v2c-1,3-9,1-9,8h24 C27,20,19,22,18,19z" />
@@ -114,7 +98,7 @@ if (!isset($_SESSION['id'])) {
                 <div class="w-[40rem]">
                     <form action="./api/postCreate.php" method="POST" class="flex flex-col">
                         <div class="flex flex-col mb-4">
-                            <label for="caption" class="mb-2">What are you thinking about?</label>
+                            <label for="caption" class="mb-2">What are you thinking about ?</label>
                             <input type="text" name="caption" id="caption" class="border-1 border-custom-gray rounded-sm p-2" placeholder="..." required>
                         </div>
                         <button type="submit" class="bg-accent text-white rounded-sm p-2">Create</button>
