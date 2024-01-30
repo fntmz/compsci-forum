@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         sendJson(422, 'Invalid email address');
 
     elseif (strlen($password) < 8) :
-        sendJson(422, 'Password must be at least 8 characters in length');
+        sendJson(422, 'Password must be at least 8 characters long');
 
     elseif (strlen($username) < 3) :
-        sendJson(422, 'Username must be at least 3 characters in length');
+        sendJson(422, 'Username must be at least 3 characters long');
 
     elseif ($password !== $password_confirm) :
         sendJson(422, 'Password and confirm password does not match');
