@@ -2,7 +2,7 @@
 require_once("../../../mysql.php");
 require_once __DIR__ . '/sendJson.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') :
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $username = $_POST['username'];
     $public_name = $_POST['public_name'];
@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
         !isset($password) ||
         !isset($password_confirm) ||
         !isset($email)
-    ) :
+    ) {
         sendJson(
             422,
             'Fill all the required fields',
             array('required_fields' => array('username', 'public_name', 'password', 'password_confirm', 'email'))
         );
-    endif;
+    }
 
     $username = htmlspecialchars(trim($username));
     $public_name = htmlspecialchars(trim($public_name));
@@ -30,19 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     $password_confirm = trim($password_confirm);
     $email = trim($email);
 
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) :
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         sendJson(422, 'Invalid email address');
-
-    elseif (strlen($password) < 8) :
+    }
+    if (strlen($password) < 8) {
         sendJson(422, 'Password must be at least 8 characters long');
-
-    elseif (strlen($username) < 3) :
+    }
+    if (strlen($username) < 3) {
         sendJson(422, 'Username must be at least 3 characters long');
-
-    elseif ($password !== $password_confirm) :
+    }
+    if ($password !== $password_confirm) {
         sendJson(422, 'Password and confirm password does not match');
+    }
 
-    endif;
     $sql = "SELECT `email` FROM `forum_users` WHERE `email` = :email";
     $query = $db->prepare($sql);
     $query->bindParam(':email', $email);
@@ -60,6 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     $query->execute();
     if ($query) sendJson(201, 'Registered successfully. Login to continue');
     sendJson(500, 'Unable to handle request. Try again');
-endif;
+}
 
 sendJson(405, 'Invalid Request');

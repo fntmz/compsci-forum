@@ -3,7 +3,7 @@ session_start();
 require_once("../../../mysql.php");
 require_once __DIR__ . '/sendJson.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') :
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -11,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     if (
         !isset($username) ||
         !isset($password)
-    ) :
+    ) {
         sendJson(
             422,
             'Fill all the required fields',
             array('required_fields' => array('username', 'password'))
         );
-    endif;
+    }
 
     $username = trim($username);
     $password = trim($password);
@@ -39,6 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') :
     sendJson(200, 'Login successful, will go to home page', array(
         'user_id' => $row['id']
     ));
-endif;
+}
 
 sendJson(405, 'Invalid Request');

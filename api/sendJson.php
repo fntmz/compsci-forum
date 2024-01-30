@@ -3,18 +3,46 @@ function sendJson($status,  $message,  $extra = array())
 {
     $response = array('status' => $status);
     if ($message) $response['message'] = $message;
-    $json = json_encode(array_merge($response, $extra));
     echo "
         <head>
+        <meta charset=\"UTF-8\">
+        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
         <title>$status $message</title>
         <link rel=\"stylesheet\" href=\"../assets/main.css\">
         <script src=\"https://cdn.tailwindcss.com\"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            color: \"rgb(var(--color))\",
+                            \"bg-color\": \"rgb(var(--bg-color))\",
+                            \"custom-gray\": \"rgb(var(--gray))\",
+                            accent: \"rgb(var(--accent))\",
+                            \"alt-accent\": \"rgb(var(--alt-accent))\",
+                        },
+                        transitionProperty: {
+                            width: \"width\",
+                            height: \"height\",
+                            filter: \"filter\",
+                        },
+                        borderWidth: {
+                            1: \"1px\",
+                        },
+                        container: {
+                            center: true,
+                        },
+                    },
+                },
+            }
+        </script>
         </head>
+
         <body>
             <div class=\"flex flex-col items-center justify-center h-screen\">
-                <h1 class=\"mb-4 text-xl\">$message</h1>
-                <br><button onclick=\"window.history.back()\"><u>Click here to return to previous page, reload to get updated information</u></button>
-                <br><button onclick=\"window.location.href = '../home.php'\"><u>Click here to go to the home page, reload to get updated information</u></button>
+                <h1 class=\"mb-4 text-2xl\">$message</h1>
+                <br><button class=\"bg-accent text-white px-4 py-3 rounded-full\" onclick=\"window.location.href = '../home.php'\">Click here to go to the home page, reload to get updated information</button>
+                <br><button class=\"bg-accent text-white px-4 py-3 rounded-full\" onclick=\"window.history.back()\">Click here to return to previous page, reload to get updated information</button>
             </div>
 
             <script defer>
@@ -37,7 +65,7 @@ function sendJson($status,  $message,  $extra = array())
                     localStorage.setItem(\"darkmode\", \"light\");
                     document.documentElement.classList.remove(\"dark\");
                 }
-            }
+            };
         </script>
         </body>
     ";
